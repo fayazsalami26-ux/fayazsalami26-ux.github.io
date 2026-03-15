@@ -2,75 +2,118 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>My Particle Website</title>
+<title>My Hacker Website</title>
 
 <style>
 
 body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    color:white;
-    text-align:center;
+margin:0;
+font-family: Arial, sans-serif;
+color:white;
+text-align:center;
+overflow-x:hidden;
 }
 
-/* Particle background */
+/* Matrix canvas */
+
+#matrix{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+z-index:-2;
+}
+
+/* Particles background */
 
 #particles-js{
-    position:fixed;
-    width:100%;
-    height:100%;
-    background: linear-gradient(135deg,#1e3c72,#2a5298);
-    z-index:-1;
+position:fixed;
+width:100%;
+height:100%;
+z-index:-1;
 }
 
 /* Navigation */
 
 nav{
-    padding:20px;
+padding:20px;
 }
 
 nav a{
-    color:white;
-    margin:15px;
-    text-decoration:none;
-    font-weight:bold;
+color:white;
+margin:15px;
+text-decoration:none;
+font-weight:bold;
 }
 
 /* Hero section */
 
 .hero{
-    padding-top:150px;
+padding-top:120px;
 }
 
 .hero h1{
-    font-size:50px;
+font-size:50px;
 }
 
 .hero p{
-    font-size:20px;
+font-size:20px;
 }
 
 /* Button */
 
 button{
-    padding:12px 25px;
-    font-size:18px;
-    border:none;
-    border-radius:8px;
-    background:white;
-    color:#333;
-    cursor:pointer;
-    transition:0.3s;
+padding:12px 25px;
+font-size:18px;
+border:none;
+border-radius:8px;
+background:white;
+color:#333;
+cursor:pointer;
+transition:0.3s;
 }
 
 button:hover{
-    transform:scale(1.1);
+transform:scale(1.1);
+}
+
+/* Hacker terminal */
+
+.terminal{
+width:80%;
+max-width:600px;
+margin:100px auto;
+padding:20px;
+background:black;
+color:#00ff00;
+font-family: monospace;
+border-radius:10px;
+box-shadow:0 0 20px #00ff00;
+text-align:left;
+}
+
+#output p{
+margin:5px 0;
+}
+
+#commandInput{
+width:100%;
+background:black;
+border:none;
+color:#00ff00;
+font-family: monospace;
+font-size:16px;
+outline:none;
 }
 
 </style>
 </head>
 
 <body>
+
+<canvas id="matrix"></canvas>
 
 <div id="particles-js"></div>
 
@@ -82,31 +125,126 @@ button:hover{
 </nav>
 
 <div class="hero">
-<h1>My Cool Website 🚀</h1>
-<p>Learning coding and building awesome stuff.</p>
+<h1>My Hacker Website 🟢</h1>
+<p>Learning coding and building cool stuff.</p>
 
 <button onclick="hello()">Click Me</button>
 </div>
 
-<!-- Particles library -->
+<div class="terminal">
+
+<div id="output">
+<p>> System booting...</p>
+<p>> Loading modules...</p>
+<p>> Welcome to my website</p>
+<p>> Type "help"</p>
+</div>
+
+<input id="commandInput" placeholder="Type a command...">
+
+</div>
+
+<!-- particles library -->
+
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
 <script>
 
+/* Button */
+
 function hello(){
-alert("Nice! You clicked the button.");
+alert("Nice! You clicked the button 😎");
 }
 
+/* Particles */
+
 particlesJS("particles-js", {
-  "particles": {
-    "number": { "value": 80 },
-    "size": { "value": 3 },
-    "move": { "speed": 2 },
-    "line_linked": {
-      "enable": true
-    }
-  }
+particles: {
+number: { value: 80 },
+size: { value: 3 },
+move: { speed: 2 },
+line_linked: { enable: true }
+}
 });
+
+/* Hacker terminal */
+
+const input = document.getElementById("commandInput");
+const output = document.getElementById("output");
+
+input.addEventListener("keydown", function(event){
+
+if(event.key === "Enter"){
+
+let command = input.value;
+
+output.innerHTML += "<p>> " + command + "</p>";
+
+if(command === "help"){
+output.innerHTML += "<p>Commands: help, about, clear</p>";
+}
+
+else if(command === "about"){
+output.innerHTML += "<p>I am a student learning coding.</p>";
+}
+
+else if(command === "clear"){
+output.innerHTML = "";
+}
+
+else{
+output.innerHTML += "<p>Command not found</p>";
+}
+
+input.value = "";
+
+}
+
+});
+
+/* Matrix effect */
+
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const matrix = letters.split("");
+
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+
+const drops = [];
+
+for(let x = 0; x < columns; x++)
+drops[x] = 1;
+
+function draw(){
+
+ctx.fillStyle = "rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle = "#0F0";
+ctx.font = fontSize + "px monospace";
+
+for(let i = 0; i < drops.length; i++){
+
+const text = matrix[Math.floor(Math.random()*matrix.length)];
+
+ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
+drops[i] = 0;
+
+drops[i]++;
+
+}
+
+}
+
+setInterval(draw,33);
 
 </script>
 
