@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My First Website</title>
+    <title>BMW M5 CS</title>
     <style>
-        /* This part controls the looks */
         body { 
-            font-family: sans-serif; 
-            text-align: center; 
-            background-color: #f0f0f0; 
-            margin-top: 100px; 
+            /* This sets the bright blue background */
+            background-color: #1F51FF; 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        h1 { 
-            color: #0066cc; 
-            font-size: 50px; 
+        img {
+            /* This keeps the car centered and looking good on your screen */
+            max-width: 90%;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
 
-    <!-- This part controls the words -->
-    <h1>Welcome</h1>
-
-</body>
-</html>
+    <!-- Link to a high-quality BMW M5 CS image from 
