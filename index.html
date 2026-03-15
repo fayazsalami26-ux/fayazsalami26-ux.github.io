@@ -2,56 +2,140 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Fayaz Page</title>
+<title>Fayaz Ultimate Fun</title>
 <style>
 body {
     margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(45deg, #000, #111);
-    font-family: Arial, sans-serif;
     overflow: hidden;
+    height: 100vh;
+    background: radial-gradient(circle at center, #000 0%, #111 100%);
+    font-family: Arial, sans-serif;
+    cursor: none; /* hide mouse for full effect */
 }
 
 h1 {
-    font-size: 200px;
-    color: #fff;
-    text-align: center;
-    animation: pulse 1.5s infinite, fadeIn 2s forwards;
-    text-shadow: 0 0 20px #fff, 0 0 40px #fff;
-    transition: color 0.3s, transform 0.5s;
+    position: absolute;
+    font-size: 150px;
     cursor: pointer;
+    animation: pulse 1.5s infinite, colorCycle 12s infinite linear;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #fff;
+    user-select: none;
+    white-space: nowrap;
+    transition: transform 0.3s;
 }
 
 /* Pulse animation */
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
 }
 
-/* Fade-in animation */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* Smooth color cycle */
+@keyframes colorCycle {
+    0% { color: #ff0000; text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000; }
+    16% { color: #ff9900; text-shadow: 0 0 10px #ff9900, 0 0 20px #ff9900, 0 0 30px #ff9900; }
+    33% { color: #ffff00; text-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00, 0 0 30px #ffff00; }
+    50% { color: #00ff00; text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00; }
+    66% { color: #00ffff; text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff; }
+    83% { color: #0000ff; text-shadow: 0 0 10px #0000ff, 0 0 20px #0000ff, 0 0 30px #0000ff; }
+    100% { color: #ff00ff; text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff; }
+}
+
+/* Particle style */
+.particle {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    pointer-events: none;
 }
 </style>
 </head>
 <body>
 
-<h1 id="name">Fayaz</h1>
+<h1 id="fayaz">Fayaz</h1>
 
 <script>
-// Change color on hover
-let nameEl = document.getElementById('name');
-nameEl.addEventListener('mouseover', () => nameEl.style.color = '#ff0000');
-nameEl.addEventListener('mouseout', () => nameEl.style.color = '#fff');
+const fayaz = document.getElementById('fayaz');
+let w = window.innerWidth;
+let h = window.innerHeight;
 
-// Grow bigger on click
-nameEl.addEventListener('click', () => {
-    nameEl.style.transform = 'scale(2)';
-    setTimeout(() => { nameEl.style.transform = 'scale(1.2)'; }, 500);
+// Particle setup
+const particles = [];
+for(let i=0;i<200;i++){
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    p.style.left = Math.random()*w+'px';
+    p.style.top = Math.random()*h+'px';
+    p.style.width = Math.random()*4+2+'px';
+    p.style.height = p.style.width;
+    p.style.opacity = Math.random();
+    document.body.appendChild(p);
+    particles.push({el: p, dx: (Math.random()-0.5)*2, dy: (Math.random()-0.5)*2});
+}
+
+// Mouse tracking
+let mouseX = w/2;
+let mouseY = h/2;
+document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+// Update Fayaz position smoothly
+function moveFayaz(){
+    let x = parseFloat(fayaz.style.left || mouseX);
+    let y = parseFloat(fayaz.style.top || mouseY);
+    x += (mouseX - x) * 0.1;
+    y += (mouseY - y) * 0.1;
+    fayaz.style.left = x + 'px';
+    fayaz.style.top = y + 'px';
+    fayaz.style.transform = `translate(-50%,-50%) rotate(${(x+y)%360}deg) scale(1.3)`;
+    requestAnimationFrame(moveFayaz);
+}
+moveFayaz();
+
+// Move particles
+function moveParticles(){
+    particles.forEach(p=>{
+        let x = parseFloat(p.el.style.left);
+        let y = parseFloat(p.el.style.top);
+        x += p.dx;
+        y += p.dy;
+        if(x<0 || x>w) p.dx*=-1;
+        if(y<0 || y>h) p.dy*=-1;
+        p.el.style.left = x+'px';
+        p.el.style.top = y+'px';
+    });
+    requestAnimationFrame(moveParticles);
+}
+moveParticles();
+
+// Click explosion effect
+fayaz.addEventListener('click', ()=>{
+    for(let i=0;i<20;i++){
+        const exp = document.createElement('div');
+        exp.classList.add('particle');
+        exp.style.left = fayaz.offsetLeft+'px';
+        exp.style.top = fayaz.offsetTop+'px';
+        exp.style.width = exp.style.height = Math.random()*10+5+'px';
+        exp.style.background = `hsl(${Math.random()*360},100%,50%)`;
+        document.body.appendChild(exp);
+        let dx = (Math.random()-0.5)*10;
+        let dy = (Math.random()-0.5)*10;
+        let life = 0;
+        function animate(){
+            if(life<30){
+                exp.style.left = parseFloat(exp.style.left)+dx+'px';
+                exp.style.top = parseFloat(exp.style.top)+dy+'px';
+                life++;
+                requestAnimationFrame(animate);
+            } else { exp.remove(); }
+        }
+        animate();
+    }
 });
 </script>
 
