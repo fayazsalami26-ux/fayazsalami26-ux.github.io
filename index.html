@@ -95,13 +95,31 @@ margin:5px 0;
 }
 
 #commandInput{
-width:100%;
+width:80%;
 background:black;
 border:none;
 color:#00ff00;
 font-family:monospace;
 font-size:16px;
 outline:none;
+}
+
+#submitBtn{
+width:18%;
+margin-left:2%;
+padding:12px;
+font-size:16px;
+border:none;
+border-radius:8px;
+background:lime;
+color:black;
+cursor:pointer;
+transition:0.3s;
+}
+
+#submitBtn:hover{
+transform:scale(1.05);
+background:green;
 }
 
 </style>
@@ -136,6 +154,7 @@ outline:none;
 </div>
 
 <input id="commandInput" placeholder="Type a command...">
+<button id="submitBtn">Submit</button>
 
 </div>
 
@@ -164,12 +183,12 @@ line_linked:{enable:true}
 
 const input=document.getElementById("commandInput");
 const output=document.getElementById("output");
+const submitBtn=document.getElementById("submitBtn");
 
-input.addEventListener("keydown",function(event){
-
-if(event.key==="Enter"){
-
+/* Function to process command */
+function processCommand(){
 let command=input.value;
+if(command.trim()==="") return; // Ignore empty
 
 output.innerHTML+="<p>> "+command+"</p>";
 
@@ -202,9 +221,18 @@ output.innerHTML+="<p>Command not found</p>";
 }
 
 input.value="";
-
 }
 
+/* Handle Enter key */
+input.addEventListener("keydown",function(event){
+if(event.key==="Enter"){
+processCommand();
+}
+});
+
+/* Handle Submit button */
+submitBtn.addEventListener("click",function(){
+processCommand();
 });
 
 /* HACKING SIMULATION */
