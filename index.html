@@ -8,13 +8,13 @@
 
 body{
 margin:0;
-font-family: Arial, sans-serif;
+font-family:Arial;
 color:white;
 text-align:center;
 overflow-x:hidden;
 }
 
-/* Matrix canvas */
+/* MATRIX BACKGROUND */
 
 #matrix{
 position:fixed;
@@ -26,7 +26,7 @@ background:black;
 z-index:-2;
 }
 
-/* Particles background */
+/* PARTICLES */
 
 #particles-js{
 position:fixed;
@@ -35,7 +35,7 @@ height:100%;
 z-index:-1;
 }
 
-/* Navigation */
+/* NAVBAR */
 
 nav{
 padding:20px;
@@ -48,7 +48,7 @@ text-decoration:none;
 font-weight:bold;
 }
 
-/* Hero section */
+/* HERO */
 
 .hero{
 padding-top:120px;
@@ -58,11 +58,7 @@ padding-top:120px;
 font-size:50px;
 }
 
-.hero p{
-font-size:20px;
-}
-
-/* Button */
+/* BUTTON */
 
 button{
 padding:12px 25px;
@@ -79,16 +75,16 @@ button:hover{
 transform:scale(1.1);
 }
 
-/* Hacker terminal */
+/* TERMINAL */
 
 .terminal{
 width:80%;
-max-width:600px;
+max-width:650px;
 margin:100px auto;
 padding:20px;
 background:black;
 color:#00ff00;
-font-family: monospace;
+font-family:monospace;
 border-radius:10px;
 box-shadow:0 0 20px #00ff00;
 text-align:left;
@@ -103,7 +99,7 @@ width:100%;
 background:black;
 border:none;
 color:#00ff00;
-font-family: monospace;
+font-family:monospace;
 font-size:16px;
 outline:none;
 }
@@ -114,7 +110,6 @@ outline:none;
 <body>
 
 <canvas id="matrix"></canvas>
-
 <div id="particles-js"></div>
 
 <nav>
@@ -136,7 +131,7 @@ outline:none;
 <div id="output">
 <p>> System booting...</p>
 <p>> Loading modules...</p>
-<p>> Welcome to my website</p>
+<p>> Welcome</p>
 <p>> Type "help"</p>
 </div>
 
@@ -144,99 +139,197 @@ outline:none;
 
 </div>
 
-<!-- particles library -->
-
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
 <script>
 
-/* Button */
+/* BUTTON */
 
 function hello(){
 alert("Nice! You clicked the button 😎");
 }
 
-/* Particles */
+/* PARTICLES */
 
-particlesJS("particles-js", {
-particles: {
-number: { value: 80 },
-size: { value: 3 },
-move: { speed: 2 },
-line_linked: { enable: true }
+particlesJS("particles-js",{
+particles:{
+number:{value:80},
+size:{value:3},
+move:{speed:2},
+line_linked:{enable:true}
 }
 });
 
-/* Hacker terminal */
+/* TERMINAL */
 
-const input = document.getElementById("commandInput");
-const output = document.getElementById("output");
+const input=document.getElementById("commandInput");
+const output=document.getElementById("output");
 
-input.addEventListener("keydown", function(event){
+input.addEventListener("keydown",function(event){
 
-if(event.key === "Enter"){
+if(event.key==="Enter"){
 
-let command = input.value;
+let command=input.value;
 
-output.innerHTML += "<p>> " + command + "</p>";
+output.innerHTML+="<p>> "+command+"</p>";
 
-if(command === "help"){
-output.innerHTML += "<p>Commands: help, about, clear</p>";
+if(command==="help"){
+output.innerHTML+="<p>Commands: help, about, login, ai, game, clear</p>";
 }
 
-else if(command === "about"){
-output.innerHTML += "<p>I am a student learning coding.</p>";
+else if(command==="about"){
+output.innerHTML+="<p>I am a student learning coding.</p>";
 }
 
-else if(command === "clear"){
-output.innerHTML = "";
+else if(command==="login"){
+fakeHack();
+}
+
+else if(command==="ai"){
+fakeAI();
+}
+
+else if(command==="game"){
+startGame();
+}
+
+else if(command==="clear"){
+output.innerHTML="";
 }
 
 else{
-output.innerHTML += "<p>Command not found</p>";
+output.innerHTML+="<p>Command not found</p>";
 }
 
-input.value = "";
+input.value="";
 
 }
 
 });
 
-/* Matrix effect */
+/* HACKING SIMULATION */
 
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
+function fakeHack(){
 
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
+output.innerHTML+="<p>Accessing secure server...</p>";
 
-const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const matrix = letters.split("");
+setTimeout(()=>{
+output.innerHTML+="<p>Bypassing firewall...</p>";
+},1000);
 
-const fontSize = 16;
-const columns = canvas.width / fontSize;
+setTimeout(()=>{
+output.innerHTML+="<p>Decrypting password...</p>";
+},2000);
 
-const drops = [];
+setTimeout(()=>{
 
-for(let x = 0; x < columns; x++)
-drops[x] = 1;
+let result=Math.random();
+
+if(result>0.5){
+
+output.innerHTML+="<p style='color:lime'>ACCESS GRANTED ✔</p>";
+output.innerHTML+="<p>Welcome admin...</p>";
+
+}else{
+
+output.innerHTML+="<p style='color:red'>ACCESS DENIED ✖</p>";
+output.innerHTML+="<p>Security alerted.</p>";
+
+}
+
+},3000);
+
+}
+
+/* FAKE AI */
+
+function fakeAI(){
+
+const responses=[
+"Hello human.",
+"Systems running normally.",
+"Coding is fun.",
+"Accessing data...",
+"Learning never stops.",
+"Interesting question.",
+"I am only a simple AI."
+];
+
+let random=responses[Math.floor(Math.random()*responses.length)];
+
+output.innerHTML+="<p>"+random+"</p>";
+
+}
+
+/* MINI GAME */
+
+function startGame(){
+
+let number=Math.floor(Math.random()*5)+1;
+
+output.innerHTML+="<p>Guess the number (1-5)</p>";
+
+input.onkeydown=function(e){
+
+if(e.key==="Enter"){
+
+let guess=parseInt(input.value);
+
+output.innerHTML+="<p>> "+guess+"</p>";
+
+if(guess===number){
+
+output.innerHTML+="<p style='color:lime'>Correct! You hacked the system.</p>";
+
+}else{
+
+output.innerHTML+="<p style='color:red'>Wrong number.</p>";
+
+}
+
+input.value="";
+
+}
+
+};
+
+}
+
+/* MATRIX EFFECT */
+
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+canvas.height=window.innerHeight;
+canvas.width=window.innerWidth;
+
+const letters="01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const matrix=letters.split("");
+
+const fontSize=16;
+const columns=canvas.width/fontSize;
+
+const drops=[];
+
+for(let x=0;x<columns;x++)
+drops[x]=1;
 
 function draw(){
 
-ctx.fillStyle = "rgba(0,0,0,0.05)";
+ctx.fillStyle="rgba(0,0,0,0.05)";
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
-ctx.fillStyle = "#0F0";
-ctx.font = fontSize + "px monospace";
+ctx.fillStyle="#0F0";
+ctx.font=fontSize+"px monospace";
 
-for(let i = 0; i < drops.length; i++){
+for(let i=0;i<drops.length;i++){
 
-const text = matrix[Math.floor(Math.random()*matrix.length)];
+const text=matrix[Math.floor(Math.random()*matrix.length)];
 
-ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
 
-if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
-drops[i] = 0;
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
+drops[i]=0;
 
 drops[i]++;
 
