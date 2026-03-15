@@ -1,38 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My First Website</title>
-  <style>
-    body {
-      font-family: Arial;
-      background-color: #e8f0ff;
-      text-align: center;
-      padding: 40px;
-    }
+<meta charset="UTF-8">
+<title>My Particle Website</title>
 
-    h1 {
-      color: #333;
-    }
+<style>
 
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: blue;
-      color: white;
-      border: none;
-      border-radius: 6px;
-    }
-  </style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    color:white;
+    text-align:center;
+}
+
+/* Particle background */
+
+#particles-js{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background: linear-gradient(135deg,#1e3c72,#2a5298);
+    z-index:-1;
+}
+
+/* Navigation */
+
+nav{
+    padding:20px;
+}
+
+nav a{
+    color:white;
+    margin:15px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+/* Hero section */
+
+.hero{
+    padding-top:150px;
+}
+
+.hero h1{
+    font-size:50px;
+}
+
+.hero p{
+    font-size:20px;
+}
+
+/* Button */
+
+button{
+    padding:12px 25px;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    background:white;
+    color:#333;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.1);
+}
+
+</style>
 </head>
 
 <body>
 
-<h1>Hello World 🌎</h1>
-<p>This is my first website.</p>
+<div id="particles-js"></div>
 
-<button onclick="alert('You clicked the button!')">
-Click Me
-</button>
+<nav>
+<a href="#">Home</a>
+<a href="#">About</a>
+<a href="#">Projects</a>
+<a href="#">Contact</a>
+</nav>
+
+<div class="hero">
+<h1>My Cool Website 🚀</h1>
+<p>Learning coding and building awesome stuff.</p>
+
+<button onclick="hello()">Click Me</button>
+</div>
+
+<!-- Particles library -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<script>
+
+function hello(){
+alert("Nice! You clicked the button.");
+}
+
+particlesJS("particles-js", {
+  "particles": {
+    "number": { "value": 80 },
+    "size": { "value": 3 },
+    "move": { "speed": 2 },
+    "line_linked": {
+      "enable": true
+    }
+  }
+});
+
+</script>
 
 </body>
 </html>
