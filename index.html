@@ -2,23 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Fayaz Ultimate Fun</title>
+<title>Fayaz Rainbow Hacker</title>
 <style>
 body {
     margin: 0;
     overflow: hidden;
     height: 100vh;
-    background: radial-gradient(circle at center, #000 0%, #111 100%);
+    background: black;
     font-family: Arial, sans-serif;
-    cursor: none; /* hide mouse for full effect */
+    cursor: none;
 }
 
+/* Fayaz text */
 h1 {
     position: absolute;
     font-size: 150px;
     cursor: pointer;
-    animation: pulse 1.5s infinite, colorCycle 12s infinite linear;
-    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #fff;
+    animation: pulse 1.5s infinite, rainbowCycle 12s infinite linear;
+    text-shadow: 0 0 10px #fff,0 0 20px #fff,0 0 40px #fff;
     user-select: none;
     white-space: nowrap;
     transition: transform 0.3s;
@@ -30,112 +31,160 @@ h1 {
     50% { transform: scale(1.3); }
 }
 
-/* Smooth color cycle */
-@keyframes colorCycle {
-    0% { color: #ff0000; text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000; }
-    16% { color: #ff9900; text-shadow: 0 0 10px #ff9900, 0 0 20px #ff9900, 0 0 30px #ff9900; }
-    33% { color: #ffff00; text-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00, 0 0 30px #ffff00; }
-    50% { color: #00ff00; text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00; }
-    66% { color: #00ffff; text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff; }
-    83% { color: #0000ff; text-shadow: 0 0 10px #0000ff, 0 0 20px #0000ff, 0 0 30px #0000ff; }
-    100% { color: #ff00ff; text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff; }
+/* Rainbow glow cycle */
+@keyframes rainbowCycle {
+    0% { color:#ff0000; text-shadow:0 0 10px #ff0000,0 0 20px #ff0000,0 0 30px #ff0000; }
+    16% { color:#ff9900; text-shadow:0 0 10px #ff9900,0 0 20px #ff9900,0 0 30px #ff9900; }
+    33% { color:#ffff00; text-shadow:0 0 10px #ffff00,0 0 20px #ffff00,0 0 30px #ffff00; }
+    50% { color:#00ff00; text-shadow:0 0 10px #00ff00,0 0 20px #00ff00,0 0 30px #00ff00; }
+    66% { color:#00ffff; text-shadow:0 0 10px #00ffff,0 0 20px #00ffff,0 0 30px #00ffff; }
+    83% { color:#0000ff; text-shadow:0 0 10px #0000ff,0 0 20px #0000ff,0 0 30px #0000ff; }
+    100% { color:#ff00ff; text-shadow:0 0 10px #ff00ff,0 0 20px #ff00ff,0 0 30px #ff00ff; }
 }
 
-/* Particle style */
+/* Particles */
 .particle {
     position: absolute;
-    width: 5px;
-    height: 5px;
-    background: white;
     border-radius: 50%;
-    opacity: 0.8;
     pointer-events: none;
+}
+
+/* Matrix canvas */
+#matrix {
+    position: absolute;
+    top:0; left:0;
+    width:100%;
+    height:100%;
+    z-index: -1;
 }
 </style>
 </head>
 <body>
 
+<canvas id="matrix"></canvas>
 <h1 id="fayaz">Fayaz</h1>
 
 <script>
-const fayaz = document.getElementById('fayaz');
-let w = window.innerWidth;
-let h = window.innerHeight;
-
-// Particle setup
-const particles = [];
-for(let i=0;i<200;i++){
-    const p = document.createElement('div');
-    p.classList.add('particle');
-    p.style.left = Math.random()*w+'px';
-    p.style.top = Math.random()*h+'px';
-    p.style.width = Math.random()*4+2+'px';
-    p.style.height = p.style.width;
-    p.style.opacity = Math.random();
-    document.body.appendChild(p);
-    particles.push({el: p, dx: (Math.random()-0.5)*2, dy: (Math.random()-0.5)*2});
+// Matrix background
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+const columns = Math.floor(w/20);
+const drops = Array(columns).fill(1);
+function drawMatrix(){
+    ctx.fillStyle="rgba(0,0,0,0.1)";
+    ctx.fillRect(0,0,w,h);
+    ctx.fillStyle="#0F0";
+    ctx.font="20px monospace";
+    for(let i=0;i<drops.length;i++){
+        const text=String.fromCharCode(33+Math.random()*94);
+        ctx.fillText(text,i*20,drops[i]*20);
+        if(drops[i]*20>h && Math.random()>0.975) drops[i]=0;
+        drops[i]++;
+    }
+    requestAnimationFrame(drawMatrix);
 }
+drawMatrix();
 
-// Mouse tracking
-let mouseX = w/2;
-let mouseY = h/2;
-document.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-});
+// Fayaz mouse tracking
+const fayaz = document.getElementById('fayaz');
+let fx=w/2, fy=h/2;
+document.addEventListener('mousemove', e=>{fx=e.clientX; fy=e.clientY;});
 
-// Update Fayaz position smoothly
+// Rainbow trail
+const trail=[];
+function createTrail(){
+    const p=document.createElement('div');
+    p.classList.add('particle');
+    p.style.left=fx+'px';
+    p.style.top=fy+'px';
+    let size=Math.random()*12+6;
+    p.style.width=p.style.height=size+'px';
+    p.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    document.body.appendChild(p);
+    trail.push({el:p, life:40, dx:(Math.random()-0.5)*2, dy:(Math.random()-0.5)*2});
+}
+function updateTrail(){
+    trail.forEach((p,i)=>{
+        p.life--;
+        if(p.life<=0){p.el.remove(); trail.splice(i,1);}
+        else{
+            let x=parseFloat(p.el.style.left)+p.dx;
+            let y=parseFloat(p.el.style.top)+p.dy;
+            p.el.style.left=x+'px';
+            p.el.style.top=y+'px';
+        }
+    });
+    requestAnimationFrame(updateTrail);
+}
+updateTrail();
+
+// Move Fayaz smoothly and rotate
 function moveFayaz(){
-    let x = parseFloat(fayaz.style.left || mouseX);
-    let y = parseFloat(fayaz.style.top || mouseY);
-    x += (mouseX - x) * 0.1;
-    y += (mouseY - y) * 0.1;
-    fayaz.style.left = x + 'px';
-    fayaz.style.top = y + 'px';
-    fayaz.style.transform = `translate(-50%,-50%) rotate(${(x+y)%360}deg) scale(1.3)`;
+    let x=parseFloat(fayaz.style.left||fx);
+    let y=parseFloat(fayaz.style.top||fy);
+    x+=(fx-x)*0.15;
+    y+=(fy-y)*0.15;
+    fayaz.style.left=x+'px';
+    fayaz.style.top=y+'px';
+    fayaz.style.transform=`translate(-50%,-50%) rotate(${(x+y)%360}deg) scale(1.3)`;
+    createTrail();
     requestAnimationFrame(moveFayaz);
 }
 moveFayaz();
 
-// Move particles
-function moveParticles(){
-    particles.forEach(p=>{
-        let x = parseFloat(p.el.style.left);
-        let y = parseFloat(p.el.style.top);
-        x += p.dx;
-        y += p.dy;
-        if(x<0 || x>w) p.dx*=-1;
-        if(y<0 || y>h) p.dy*=-1;
-        p.el.style.left = x+'px';
-        p.el.style.top = y+'px';
-    });
-    requestAnimationFrame(moveParticles);
-}
-moveParticles();
-
 // Click explosion effect
-fayaz.addEventListener('click', ()=>{
-    for(let i=0;i<20;i++){
-        const exp = document.createElement('div');
+fayaz.addEventListener('click',()=>{
+    for(let i=0;i<30;i++){
+        const exp=document.createElement('div');
         exp.classList.add('particle');
-        exp.style.left = fayaz.offsetLeft+'px';
-        exp.style.top = fayaz.offsetTop+'px';
-        exp.style.width = exp.style.height = Math.random()*10+5+'px';
-        exp.style.background = `hsl(${Math.random()*360},100%,50%)`;
+        exp.style.left=fayaz.offsetLeft+'px';
+        exp.style.top=fayaz.offsetTop+'px';
+        let size=Math.random()*14+6;
+        exp.style.width=exp.style.height=size+'px';
+        exp.style.background=`hsl(${Math.random()*360},100%,50%)`;
         document.body.appendChild(exp);
-        let dx = (Math.random()-0.5)*10;
-        let dy = (Math.random()-0.5)*10;
-        let life = 0;
+        let dx=(Math.random()-0.5)*15, dy=(Math.random()-0.5)*15, life=0;
         function animate(){
-            if(life<30){
-                exp.style.left = parseFloat(exp.style.left)+dx+'px';
-                exp.style.top = parseFloat(exp.style.top)+dy+'px';
-                life++;
-                requestAnimationFrame(animate);
-            } else { exp.remove(); }
+            if(life<40){ exp.style.left=parseFloat(exp.style.left)+dx+'px'; exp.style.top=parseFloat(exp.style.top)+dy+'px'; life++; requestAnimationFrame(animate);}
+            else exp.remove();
         }
         animate();
     }
+});
+
+// Background floating particles
+const bgParticles=[];
+for(let i=0;i<150;i++){
+    const p=document.createElement('div');
+    p.classList.add('particle');
+    p.style.left=Math.random()*w+'px';
+    p.style.top=Math.random()*h+'px';
+    let size=Math.random()*4+2;
+    p.style.width=p.style.height=size+'px';
+    p.style.background='#0f0';
+    p.style.opacity=Math.random();
+    document.body.appendChild(p);
+    bgParticles.push({el:p, dx:(Math.random()-0.5)*2, dy:(Math.random()-0.5)*2});
+}
+function moveBGParticles(){
+    bgParticles.forEach(p=>{
+        let x=parseFloat(p.el.style.left);
+        let y=parseFloat(p.el.style.top);
+        x+=p.dx; y+=p.dy;
+        if(x<0||x>w)p.dx*=-1;
+        if(y<0||y>h)p.dy*=-1;
+        p.el.style.left=x+'px'; p.el.style.top=y+'px';
+    });
+    requestAnimationFrame(moveBGParticles);
+}
+moveBGParticles();
+
+// Handle resize
+window.addEventListener('resize', ()=>{
+    w=canvas.width=window.innerWidth;
+    h=canvas.height=window.innerHeight;
 });
 </script>
 
