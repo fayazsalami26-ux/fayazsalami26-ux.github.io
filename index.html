@@ -2,9 +2,58 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Blank Website</title>
+<title>Fun HI Page</title>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(45deg, #000, #111);
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+h1 {
+    font-size: 200px;
+    color: #fff;
+    text-align: center;
+    animation: pulse 1.5s infinite, fadeIn 2s forwards;
+    text-shadow: 0 0 20px #fff, 0 0 40px #fff;
+    transition: color 0.3s, transform 0.5s;
+    cursor: pointer;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+</style>
 </head>
 <body>
-HI
+
+<h1 id="hi">HI</h1>
+
+<script>
+// Change color on hover
+let hi = document.getElementById('hi');
+hi.addEventListener('mouseover', () => hi.style.color = '#ff0000');
+hi.addEventListener('mouseout', () => hi.style.color = '#fff');
+
+// Grow bigger on click
+hi.addEventListener('click', () => {
+    hi.style.transform = 'scale(2)';
+    setTimeout(() => { hi.style.transform = 'scale(1.2)'; }, 500);
+});
+</script>
+
 </body>
 </html>
