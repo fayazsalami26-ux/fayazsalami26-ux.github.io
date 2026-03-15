@@ -4,22 +4,27 @@
     <title>BMW M5 CS</title>
     <style>
         body { 
-            /* This sets the bright blue background */
+            /* This sets the bright neon blue background */
             background-color: #1F51FF; 
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
         img {
-            /* This keeps the car centered and looking good on your screen */
+            /* This keeps the car centered and looking sharp */
             max-width: 90%;
-            border-radius: 15px;
-            box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
+            border-radius: 20px;
+            box-shadow: 0px 15px 40px rgba(0,0,0,0.6);
         }
     </style>
 </head>
 <body>
 
-    <!-- Link to a high-quality BMW M5 CS image from 
+    <!-- Link to the BMW M5 CS image -->
+    <img src="https://upload.wikimedia.org" alt="BMW M5 CS">
+
+</body>
+</html>
