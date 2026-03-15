@@ -1,35 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>BMW M5 CS</title>
+    <title>My Supercar Collection</title>
     <style>
         body { 
-            background-color: #1F51FF; 
+            background-color: white; 
             margin: 0;
+            padding: 40px 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            font-family: sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         h1 {
-            color: white;
-            margin-bottom: 20px;
+            color: #333;
+            font-size: 40px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .car-container {
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        h2 {
+            color: #1F51FF;
+            font-size: 24px;
+            margin-bottom: 15px;
         }
         img {
-            max-width: 90%;
-            border-radius: 20px;
-            box-shadow: 0px 15px 40px rgba(0,0,0,0.6);
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+        img:hover {
+            transform: scale(1.02);
         }
     </style>
 </head>
 <body>
 
-    <h1>BMW M5 CS</h1>
-    <!-- Updated reliable image link -->
-    <img src="https://www.topgear.com" alt="BMW M5 CS">
+    <h1>Supercar Collection</h1>
+
+    <!-- BMW M5 CS -->
+    <div class="car-container">
+        <h2>BMW M5 CS</h2>
+        <img src="https://www.topgear.com" alt="BMW M5 CS">
+    </div>
+
+    <!-- McLaren Supercar -->
+    <div class="car-container">
+        <h2>McLaren 720S</h2>
+        <img src="https://images.unsplash.com" alt="McLaren">
+    </div>
+
+    <!-- Lamborghini SVJ -->
+    <div class="car-container">
+        <h2>Lamborghini Aventador SVJ</h2>
+        <img src="https://images.unsplash.com" alt="Lamborghini SVJ">
+    </div>
 
 </body>
 </html>
