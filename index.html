@@ -1,112 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Reaction Test + Leaderboard</title>
-    <style>
-        body { font-family: sans-serif; background: #121212; color: white; text-align: center; }
-        #game-area { width: 90%; height: 300px; margin: 20px auto; display: flex; align-items: center; justify-content: center; border-radius: 15px; background: #333; cursor: pointer; font-size: 24px; font-weight: bold; transition: 0.1s; }
-        .waiting { background: #cf352e !important; }
-        .go { background: #2ecc71 !important; }
-        .leaderboard { width: 300px; margin: 40px auto; background: #1e1e1e; padding: 20px; border-radius: 10px; border: 1px solid #edff00; }
-        table { width: 100%; margin-top: 10px; border-collapse: collapse; }
-        th, td { padding: 8px; border-bottom: 1px solid #333; }
-        input { padding: 10px; border-radius: 5px; border: none; margin-right: 5px; }
-        button { padding: 10px 20px; background: #edff00; color: black; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        #save-section { display: none; margin-top: 20px; }
-    </style>
-</head>
-<body>
-
-    <h1>REACTION TEST</h1>
-    <div id="status">Press START to begin</div>
-
-    <div id="game-area" onclick="handleAreaClick()">CLICK START TO BEGIN</div>
-    
-    <button onclick="startGame()">START</button>
-
-    <div id="save-section">
-        <h3>NEW SCORE: <span id="current-score">0</span>ms</h3>
-        <input type="text" id="username" placeholder="Enter Name">
-        <button onclick="saveScore()">SAVE TO LEADERBOARD</button>
-    </div>
-
-    <div class="leaderboard">
-        <h3>TOP 5 SCORES</h3>
-        <table id="leaderboard-table">
-            <thead><tr><th>Name</th><th>Time (ms)</th></tr></thead>
-            <tbody id="leaderboard-body"></tbody>
-        </table>
-        <button style="background:#555; color:white; margin-top:10px; font-size:10px;" onclick="clearLeaderboard()">Clear All</button>
-    </div>
-
-    <script>
-        let startTime, timeoutHandle;
-        let isWaiting = false, isGreen = false;
-        let lastScore = 0;
-
-        const area = document.getElementById('game-area');
-        const status = document.getElementById('status');
-        const saveSection = document.getElementById('save-section');
-
-        function startGame() {
-            saveSection.style.display = "none";
-            isWaiting = true;
-            isGreen = false;
-            area.className = "waiting";
-            area.innerText = "WAIT FOR GREEN...";
-            status.innerText = "Don't click yet!";
-            
-            let waitTime = Math.random() * 3000 + 2000;
-            timeoutHandle = setTimeout(() => {
-                area.className = "go";
-                area.innerText = "CLICK NOW!";
-                startTime = Date.now();
-                isGreen = true;
-                isWaiting = false;
-            }, waitTime);
-        }
-
-        function handleAreaClick() {
-            if (isGreen) {
-                lastScore = Date.now() - startTime;
-                isGreen = false;
-                area.className = "";
-                area.innerText = lastScore + "ms";
-                status.innerText = "Great job!";
-                document.getElementById('current-score').innerText = lastScore;
-                saveSection.style.display = "block";
-            } else if (isWaiting) {
-                clearTimeout(timeoutHandle);
-                isWaiting = false;
-                area.className = "";
-                area.innerText = "TOO EARLY!";
-                status.innerText = "Try again.";
-            }
-        }
-
-        function saveScore() {
-            const name = document.getElementById('username').value || "Anonymous";
-            const scores = JSON.parse(localStorage.getItem('reactionScores')) || [];
-            
-            scores.push({ name: name, score: lastScore });
-            scores.sort((a, b) => a.score - b.score); // Sort fastest to slowest
-            
-            localStorage.setItem('reactionScores', JSON.stringify(scores.slice(0, 5)));
-            document.getElementById('username').value = "";
-            saveSection.style.display = "none";
-            updateLeaderboard();
-        }
-
-        function updateLeaderboard() {
-            const scores = JSON.parse(localStorage.getItem('reactionScores')) || [];
-            const body = document.getElementById('leaderboard-body');
-            body.innerHTML = scores.map(s => `<tr><td>${s.name}</td><td>${s.score}ms</td></tr>`).join('');
-        }
-
-        function clearLeaderboard() { localStorage.removeItem('reactionScores'); updateLeaderboard(); }
-
-        updateLeaderboard(); // Load on start
-    </script>
-</body>
-</html>
+<style>
+    body {
+        /* Change 'black' to any color like 'navy', 'darkred', or 'purple' */
+        background-color: #1a1a2e; 
+        
+        /* This changes the text color */
+        color: #edff00; 
+        
+        /* This centers everything on the screen */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+    }
+</style>
