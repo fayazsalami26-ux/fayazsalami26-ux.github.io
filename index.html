@@ -1,50 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Styled Site</title>
-    <!-- 1. This link "grabs" the fancy font from Google -->
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
-    
+    <meta charset="UTF-8">
+    <title>M5 CS Project</title>
     <style>
         body {
-            background-color: #0047AB; /* Your Blue background */
+            background-color: #000; /* Black background looks best with cars */
             margin: 0;
-            height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            overflow: hidden; /* Keeps the big text from making scrollbars */
+            align-items: center;
+            height: 100vh;
         }
 
-        .background-name {
-            /* 2. Fancy Font & Size */
-            font-family: 'Dancing Script', cursive;
-            font-size: 15vw; /* "vw" makes it scale with the screen size */
-            
-            /* 3. Making it look like a background */
-            color: rgba(255, 255, 255, 0.1); /* White but 90% see-through */
-            position: absolute;
-            z-index: -1; /* Pushes it behind everything else */
-            white-space: nowrap;
-            user-select: none; /* People can't accidentally highlight it */
-        }
-
-        .content {
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
+        img {
+            max-width: 80%;  /* Keeps it from filling the whole screen */
+            border-radius: 15px; /* Rounds the corners slightly */
+            border: 2px solid #333;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body>
 
-    <!-- Put your name here! -->
-    <div class="background-name">YOUR NAME</div>
-
-    <div class="content">
-        <h1>Welcome to My Project</h1>
-        <p>This is my 9th grade CS practice.</p>
-    </div>
+    <!-- This pulls a high-quality M5 CS image from the web -->
+    <img src="https://images.unsplash.com" alt="BMW M5 CS">
 
 </body>
 </html>
