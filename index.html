@@ -4,95 +4,83 @@
     <meta charset="UTF-8">
     <title>FC Mobile Squad Compare</title>
     <style>
-        body { font-family: 'Arial Black', sans-serif; background: #0a0a0a; color: white; text-align: center; padding: 50px; }
-        .header { margin-bottom: 40px; border-bottom: 3px solid #edff00; display: inline-block; padding-bottom: 10px; }
-        .container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
-        
-        /* Team Cards */
-        .card { background: #1a1a1a; border: 2px solid #333; border-radius: 20px; padding: 30px; width: 300px; transition: 0.5s; }
-        .winner { border-color: #edff00; box-shadow: 0 0 30px rgba(237, 255, 0, 0.4); transform: scale(1.08); }
-        
-        /* Inputs */
-        .input-group { text-align: left; margin-bottom: 20px; }
-        label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
-        input { width: 90%; background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; font-size: 16px; }
-        input:focus { border-color: #edff00; outline: none; }
-
-        /* Button */
-        button { background: #edff00; color: black; border: none; padding: 20px 50px; font-size: 20px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 50px; transition: 0.2s; }
-        button:hover { transform: scale(1.1); background: #f5ff66; }
-
-        #result-text { margin-top: 40px; font-size: 32px; color: #edff00; height: 50px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0b0e13; color: white; text-align: center; padding: 20px; }
+        .container { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; }
+        .team-card { background: #161b22; border: 2px solid #30363d; border-radius: 15px; padding: 20px; width: 340px; transition: 0.3s; }
+        .winner { border-color: #edff00 !important; box-shadow: 0 0 20px rgba(237, 255, 0, 0.4); }
+        h3 { color: #edff00; margin-bottom: 15px; }
+        input, textarea { width: 90%; background: #0d1117; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+        textarea { height: 100px; resize: none; font-size: 14px; }
+        .controls { margin-top: 30px; }
+        button { padding: 15px 30px; font-weight: bold; border-radius: 8px; cursor: pointer; border: none; margin: 5px; }
+        .btn-compare { background: #edff00; color: black; }
+        .btn-reset { background: #30363d; color: white; }
+        #result { margin-top: 20px; font-size: 24px; font-weight: bold; color: #edff00; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>FC MOBILE: SQUAD BATTLE</h1>
-    </div>
+    <h1>FC MOBILE SQUAD BATTLE</h1>
 
     <div class="container">
         <!-- Team 1 -->
-        <div class="card" id="card1">
-            <h2 style="color:#edff00">TEAM A</h2>
-            <div class="input-group">
-                <label>IN-GAME USERNAME</label>
-                <input type="text" id="name1" placeholder="Ex: FC_Gamer1">
-            </div>
-            <div class="input-group">
-                <label>TEAM OVR</label>
-                <input type="number" id="ovr1" placeholder="Ex: 101">
-            </div>
+        <div class="team-card" id="card1">
+            <h3>TEAM 1</h3>
+            <input type="text" id="name1" placeholder="In-Game Username">
+            <input type="number" id="ovr1" placeholder="Team OVR (e.g. 104)">
+            <label style="font-size: 12px; color: #8b949e;">YOUR 11 PLAYERS:</label>
+            <textarea id="squad1" placeholder="Ex: Haaland, Vinícius, Rodri..."></textarea>
         </div>
 
         <!-- Team 2 -->
-        <div class="card" id="card2">
-            <h2 style="color:#edff00">TEAM B</h2>
-            <div class="input-group">
-                <label>IN-GAME USERNAME</label>
-                <input type="text" id="name2" placeholder="Ex: ProPlayer99">
-            </div>
-            <div class="input-group">
-                <label>TEAM OVR</label>
-                <input type="number" id="ovr2" placeholder="Ex: 99">
-            </div>
+        <div class="team-card" id="card2">
+            <h3>TEAM 2</h3>
+            <input type="text" id="name2" placeholder="Friend's Username">
+            <input type="number" id="ovr2" placeholder="Team OVR (e.g. 102)">
+            <label style="font-size: 12px; color: #8b949e;">FRIEND'S 11 PLAYERS:</label>
+            <textarea id="squad2" placeholder="Ex: Mbappé, Messi, Bellingham..."></textarea>
         </div>
     </div>
 
-    <button onclick="compareTeams()">COMPARE SQUADS</button>
+    <div class="controls">
+        <button class="btn-compare" onclick="battle()">START BATTLE</button>
+        <button class="btn-reset" onclick="resetPage()">RESET ALL</button>
+    </div>
 
-    <div id="result-text"></div>
+    <div id="result"></div>
 
     <script>
-        function compareTeams() {
-            // Get values from inputs
-            let name1 = document.getElementById('name1').value || "Team A";
-            let ovr1 = parseInt(document.getElementById('ovr1').value) || 0;
-            let name2 = document.getElementById('name2').value || "Team B";
-            let ovr2 = parseInt(document.getElementById('ovr2').value) || 0;
-
+        function battle() {
+            let n1 = document.getElementById('name1').value || "Team 1";
+            let o1 = parseInt(document.getElementById('ovr1').value) || 0;
+            let n2 = document.getElementById('name2').value || "Team 2";
+            let o2 = parseInt(document.getElementById('ovr2').value) || 0;
+            
             let c1 = document.getElementById('card1');
             let c2 = document.getElementById('card2');
-            let res = document.getElementById('result-text');
+            let res = document.getElementById('result');
 
-            // Reset UI
-            c1.className = "card";
-            c2.className = "card";
+            c1.classList.remove('winner');
+            c2.classList.remove('winner');
 
-            // Comparison Logic
-            if (ovr1 > ovr2) {
-                c1.className = "card winner";
-                res.innerHTML = "🏆 " + name1.toUpperCase() + " WINS!";
-            } else if (ovr2 > ovr1) {
-                c2.className = "card winner";
-                res.innerHTML = "🏆 " + name2.toUpperCase() + " WINS!";
-            } else if (ovr1 === 0 && ovr2 === 0) {
-                res.innerHTML = "Enter your OVR to battle!";
+            if (o1 > o2) {
+                c1.classList.add('winner');
+                res.innerText = "🏆 " + n1.toUpperCase() + " WINS!";
+            } else if (o2 > o1) {
+                c2.classList.add('winner');
+                res.innerText = "🏆 " + n2.toUpperCase() + " WINS!";
             } else {
-                res.innerHTML = "IT'S A DRAW!";
+                res.innerText = "IT'S A DRAW!";
             }
         }
-    </script>
 
+        function resetPage() {
+            // Clears all inputs and textareas
+            document.querySelectorAll('input, textarea').forEach(el => el.value = "");
+            document.getElementById('card1').classList.remove('winner');
+            document.getElementById('card2').classList.remove('winner');
+            document.getElementById('result').innerText = "";
+        }
+    </script>
 </body>
 </html>
