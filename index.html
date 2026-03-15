@@ -2,372 +2,132 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>My Hacker Website</title>
+<title>Hacker Club Game - Hardcore Mode</title>
 
 <style>
-
-body{
-margin:0;
-font-family:Arial;
-color:white;
-text-align:center;
-overflow-x:hidden;
+body{margin:0;font-family:Arial;color:white;text-align:center;overflow-x:hidden;}
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:-2;}
+#particles-js{position:fixed;width:100%;height:100%;z-index:-1;}
+.terminal{width:80%;max-width:650px;margin:50px auto;padding:20px;background:black;color:#00ff00;font-family:monospace;border-radius:10px;box-shadow:0 0 20px #00ff00;text-align:center;transition:0.3s;}
+button.answerBtn{padding:10px 20px;margin:10px;font-size:16px;border-radius:8px;border:none;cursor:pointer;background:white;color:black;transition:0.3s;}
+button.answerBtn:hover{background:lime; color:black;}
+#message{margin-top:15px;font-weight:bold;transition:0.3s;}
+.shake{animation:shake 0.5s;}
+@keyframes shake{
+  0%{transform:translateX(0);}
+  25%{transform:translateX(-10px);}
+  50%{transform:translateX(10px);}
+  75%{transform:translateX(-10px);}
+  100%{transform:translateX(0);}
 }
-
-/* MATRIX BACKGROUND */
-
-#matrix{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-z-index:-2;
-}
-
-/* PARTICLES */
-
-#particles-js{
-position:fixed;
-width:100%;
-height:100%;
-z-index:-1;
-}
-
-/* NAVBAR */
-
-nav{
-padding:20px;
-}
-
-nav a{
-color:white;
-margin:15px;
-text-decoration:none;
-font-weight:bold;
-}
-
-/* HERO */
-
-.hero{
-padding-top:120px;
-}
-
-.hero h1{
-font-size:50px;
-}
-
-/* BUTTON */
-
-button{
-padding:12px 25px;
-font-size:18px;
-border:none;
-border-radius:8px;
-background:white;
-color:#333;
-cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{
-transform:scale(1.1);
-}
-
-/* TERMINAL */
-
-.terminal{
-width:80%;
-max-width:650px;
-margin:100px auto;
-padding:20px;
-background:black;
-color:#00ff00;
-font-family:monospace;
-border-radius:10px;
-box-shadow:0 0 20px #00ff00;
-text-align:left;
-}
-
-#output p{
-margin:5px 0;
-}
-
-#commandInput{
-width:80%;
-background:black;
-border:none;
-color:#00ff00;
-font-family:monospace;
-font-size:16px;
-outline:none;
-}
-
-#submitBtn{
-width:18%;
-margin-left:2%;
-padding:12px;
-font-size:16px;
-border:none;
-border-radius:8px;
-background:lime;
-color:black;
-cursor:pointer;
-transition:0.3s;
-}
-
-#submitBtn:hover{
-transform:scale(1.05);
-background:green;
-}
-
+.flashGreen{background-color:lime;color:black;}
 </style>
 </head>
-
 <body>
 
 <canvas id="matrix"></canvas>
 <div id="particles-js"></div>
 
-<nav>
-<a href="#">Home</a>
-<a href="#">About</a>
-<a href="#">Projects</a>
-<a href="#">Contact</a>
-</nav>
-
-<div class="hero">
-<h1>My Hacker Website 🟢</h1>
-<p>Learning coding and building cool stuff.</p>
-
-<button onclick="hello()">Click Me</button>
-</div>
-
-<div class="terminal">
-
-<div id="output">
-<p>> System booting...</p>
-<p>> Loading modules...</p>
-<p>> Welcome</p>
-<p>> Type "help"</p>
-</div>
-
-<input id="commandInput" placeholder="Type a command...">
-<button id="submitBtn">Submit</button>
-
+<div class="terminal" id="gameContainer">
+<h2>Hacker Club Game - Hardcore Mode</h2>
+<div id="question">Click Start to begin Level 1!</div>
+<div id="answers"></div>
+<div id="message"></div>
+<button onclick="startLevel(0)">Start</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-
 <script>
 
-/* BUTTON */
+/* GAME LOGIC */
+let gameLevel = 0;
 
-function hello(){
-alert("Nice! You clicked the button 😎");
+const levels = [
+  {q: "Level 1: Which is the best club in the world?", options:["Real Madrid","Barcelona"], answer:"Real Madrid"},
+  {q: "Level 2: Who is the best attacker?", options:["Mbappe","Yamal"], answer:"Mbappe"},
+  {q: "Level 3: Who is the best goalkeeper?", options:["Courtois","Joan Garcia"], answer:"Courtois"},
+  {q: "Level 4: Who is the best midfielder?", options:["Jude Bellingham","Pedri"], answer:"Jude Bellingham"}
+];
+
+function startLevel(levelIndex){
+  gameLevel = levelIndex;
+  const level = levels[levelIndex];
+  document.getElementById("question").innerHTML = level.q;
+  const answersDiv = document.getElementById("answers");
+  answersDiv.innerHTML = "";
+  level.options.forEach(opt=>{
+    const btn = document.createElement("button");
+    btn.className = "answerBtn";
+    btn.innerText = opt;
+    btn.onclick = ()=>checkAnswer(opt);
+    answersDiv.appendChild(btn);
+  });
+  const message = document.getElementById("message");
+  message.innerHTML = "";
+  const terminal = document.getElementById("gameContainer");
+  terminal.classList.remove("flashGreen","shake");
+  terminal.style.backgroundColor="black";
+  terminal.style.color="#00ff00";
+}
+
+function checkAnswer(selected){
+  const correct = levels[gameLevel].answer;
+  const message = document.getElementById("message");
+  const terminal = document.getElementById("gameContainer");
+
+  if(selected === correct){
+    message.innerHTML = "Vamooos! ⚽️";
+    terminal.classList.remove("shake");
+    terminal.classList.add("flashGreen");
+    setTimeout(()=>terminal.classList.remove("flashGreen"),600);
+
+    if(gameLevel+1 < levels.length){
+      setTimeout(()=>startLevel(gameLevel+1),1000);
+    } else {
+      setTimeout(()=>{
+        document.getElementById("question").innerHTML="🎉 You completed all levels! 🎉";
+        document.getElementById("answers").innerHTML="";
+        message.innerHTML="";
+        terminal.style.backgroundColor="black";
+        terminal.style.color="#00ff00";
+      },1000);
+    }
+  } else {
+    message.innerHTML = "Haha looser 😎 Restarting from Level 1...";
+    terminal.classList.remove("flashGreen");
+    terminal.classList.add("shake");
+    setTimeout(()=>startLevel(0),1500);
+  }
 }
 
 /* PARTICLES */
-
-particlesJS("particles-js",{
-particles:{
-number:{value:80},
-size:{value:3},
-move:{speed:2},
-line_linked:{enable:true}
-}
-});
-
-/* TERMINAL */
-
-const input=document.getElementById("commandInput");
-const output=document.getElementById("output");
-const submitBtn=document.getElementById("submitBtn");
-
-/* Function to process command */
-function processCommand(){
-let command=input.value;
-if(command.trim()==="") return; // Ignore empty
-
-output.innerHTML+="<p>> "+command+"</p>";
-
-if(command==="help"){
-output.innerHTML+="<p>Commands: help, about, login, ai, game, clear</p>";
-}
-
-else if(command==="about"){
-output.innerHTML+="<p>I am a student learning coding.</p>";
-}
-
-else if(command==="login"){
-fakeHack();
-}
-
-else if(command==="ai"){
-fakeAI();
-}
-
-else if(command==="game"){
-startGame();
-}
-
-else if(command==="clear"){
-output.innerHTML="";
-}
-
-else{
-output.innerHTML+="<p>Command not found</p>";
-}
-
-input.value="";
-}
-
-/* Handle Enter key */
-input.addEventListener("keydown",function(event){
-if(event.key==="Enter"){
-processCommand();
-}
-});
-
-/* Handle Submit button */
-submitBtn.addEventListener("click",function(){
-processCommand();
-});
-
-/* HACKING SIMULATION */
-
-function fakeHack(){
-
-output.innerHTML+="<p>Accessing secure server...</p>";
-
-setTimeout(()=>{
-output.innerHTML+="<p>Bypassing firewall...</p>";
-},1000);
-
-setTimeout(()=>{
-output.innerHTML+="<p>Decrypting password...</p>";
-},2000);
-
-setTimeout(()=>{
-
-let result=Math.random();
-
-if(result>0.5){
-
-output.innerHTML+="<p style='color:lime'>ACCESS GRANTED ✔</p>";
-output.innerHTML+="<p>Welcome admin...</p>";
-
-}else{
-
-output.innerHTML+="<p style='color:red'>ACCESS DENIED ✖</p>";
-output.innerHTML+="<p>Security alerted.</p>";
-
-}
-
-},3000);
-
-}
-
-/* FAKE AI */
-
-function fakeAI(){
-
-const responses=[
-"Hello human.",
-"Systems running normally.",
-"Coding is fun.",
-"Accessing data...",
-"Learning never stops.",
-"Interesting question.",
-"I am only a simple AI."
-];
-
-let random=responses[Math.floor(Math.random()*responses.length)];
-
-output.innerHTML+="<p>"+random+"</p>";
-
-}
-
-/* MINI GAME */
-
-function startGame(){
-
-let number=Math.floor(Math.random()*5)+1;
-
-output.innerHTML+="<p>Guess the number (1-5)</p>";
-
-input.onkeydown=function(e){
-
-if(e.key==="Enter"){
-
-let guess=parseInt(input.value);
-
-output.innerHTML+="<p>> "+guess+"</p>";
-
-if(guess===number){
-
-output.innerHTML+="<p style='color:lime'>Correct! You hacked the system.</p>";
-
-}else{
-
-output.innerHTML+="<p style='color:red'>Wrong number.</p>";
-
-}
-
-input.value="";
-
-}
-
-};
-
-}
+particlesJS("particles-js",{particles:{number:{value:80},size:{value:3},move:{speed:2},line_linked:{enable:true}}});
 
 /* MATRIX EFFECT */
-
 const canvas=document.getElementById("matrix");
 const ctx=canvas.getContext("2d");
-
 canvas.height=window.innerHeight;
 canvas.width=window.innerWidth;
-
 const letters="01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const matrix=letters.split("");
-
 const fontSize=16;
 const columns=canvas.width/fontSize;
-
 const drops=[];
-
-for(let x=0;x<columns;x++)
-drops[x]=1;
-
+for(let x=0;x<columns;x++) drops[x]=1;
 function draw(){
-
 ctx.fillStyle="rgba(0,0,0,0.05)";
 ctx.fillRect(0,0,canvas.width,canvas.height);
-
 ctx.fillStyle="#0F0";
 ctx.font=fontSize+"px monospace";
-
 for(let i=0;i<drops.length;i++){
-
 const text=matrix[Math.floor(Math.random()*matrix.length)];
-
 ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-
-if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
-drops[i]=0;
-
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
 drops[i]++;
-
 }
-
 }
-
 setInterval(draw,33);
 
 </script>
-
 </body>
 </html>
