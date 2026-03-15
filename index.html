@@ -2,93 +2,97 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FC Mobile Squad Compare</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0e13; color: white; text-align: center; padding: 20px; }
-        .header { margin-bottom: 30px; }
-        .container { display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; }
-        .team-card { background: linear-gradient(145deg, #161b22, #0d1117); border: 2px solid #30363d; border-radius: 20px; padding: 25px; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s; }
-        .team-card h3 { color: #edff00; margin-bottom: 20px; }
-        .input-group { text-align: left; margin-bottom: 15px; }
-        label { display: block; font-size: 12px; color: #8b949e; margin-bottom: 5px; text-transform: uppercase; }
-        input { width: 93%; background: #0d1117; border: 1px solid #30363d; color: white; padding: 12px; border-radius: 8px; font-size: 16px; }
+        body { font-family: 'Arial Black', sans-serif; background: #0a0a0a; color: white; text-align: center; padding: 50px; }
+        .header { margin-bottom: 40px; border-bottom: 3px solid #edff00; display: inline-block; padding-bottom: 10px; }
+        .container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        
+        /* Team Cards */
+        .card { background: #1a1a1a; border: 2px solid #333; border-radius: 20px; padding: 30px; width: 300px; transition: 0.5s; }
+        .winner { border-color: #edff00; box-shadow: 0 0 30px rgba(237, 255, 0, 0.4); transform: scale(1.08); }
+        
+        /* Inputs */
+        .input-group { text-align: left; margin-bottom: 20px; }
+        label { display: block; font-size: 12px; color: #888; margin-bottom: 5px; }
+        input { width: 90%; background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; font-size: 16px; }
         input:focus { border-color: #edff00; outline: none; }
-        .compare-btn { background: #edff00; color: black; border: none; padding: 18px 40px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 40px; box-shadow: 0 0 15px rgba(237, 255, 0, 0.4); }
-        .compare-btn:hover { background: #f5ff66; transform: translateY(-2px); }
-        #result-banner { margin-top: 40px; font-size: 28px; font-weight: bold; min-height: 40px; }
-        .winner { border-color: #edff00 !important; box-shadow: 0 0 40px rgba(237, 255, 0, 0.3); transform: scale(1.05); }
+
+        /* Button */
+        button { background: #edff00; color: black; border: none; padding: 20px 50px; font-size: 20px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 50px; transition: 0.2s; }
+        button:hover { transform: scale(1.1); background: #f5ff66; }
+
+        #result-text { margin-top: 40px; font-size: 32px; color: #edff00; height: 50px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>FC MOBILE SQUAD BATTLE</h1>
-        <p>Enter details manually to compare with your friend!</p>
+        <h1>FC MOBILE: SQUAD BATTLE</h1>
     </div>
 
     <div class="container">
         <!-- Team 1 -->
-        <div class="team-card" id="card1">
-            <h3>TEAM A</h3>
+        <div class="card" id="card1">
+            <h2 style="color:#edff00">TEAM A</h2>
             <div class="input-group">
-                <label>In-Game Username</label>
-                <input type="text" id="user1" placeholder="Username">
+                <label>IN-GAME USERNAME</label>
+                <input type="text" id="name1" placeholder="Ex: FC_Gamer1">
             </div>
             <div class="input-group">
-                <label>Team OVR</label>
-                <input type="number" id="ovr1" placeholder="e.g. 102">
+                <label>TEAM OVR</label>
+                <input type="number" id="ovr1" placeholder="Ex: 101">
             </div>
         </div>
 
         <!-- Team 2 -->
-        <div class="team-card" id="card2">
-            <h3>TEAM B</h3>
+        <div class="card" id="card2">
+            <h2 style="color:#edff00">TEAM B</h2>
             <div class="input-group">
-                <label>In-Game Username</label>
-                <input type="text" id="user2" placeholder="Username">
+                <label>IN-GAME USERNAME</label>
+                <input type="text" id="name2" placeholder="Ex: ProPlayer99">
             </div>
             <div class="input-group">
-                <label>Team OVR</label>
-                <input type="number" id="ovr2" placeholder="e.g. 98">
+                <label>TEAM OVR</label>
+                <input type="number" id="ovr2" placeholder="Ex: 99">
             </div>
         </div>
     </div>
 
-    <button class="compare-btn" onclick="runBattle()">START COMPARISON</button>
-    <div id="result-banner"></div>
+    <button onclick="compareTeams()">COMPARE SQUADS</button>
+
+    <div id="result-text"></div>
 
     <script>
-        function runBattle() {
-            const u1 = document.getElementById('user1').value || "Player 1";
-            const o1 = parseInt(document.getElementById('ovr1').value) || 0;
-            const u2 = document.getElementById('user2').value || "Player 2";
-            const o2 = parseInt(document.getElementById('ovr2').value) || 0;
+        function compareTeams() {
+            // Get values from inputs
+            let name1 = document.getElementById('name1').value || "Team A";
+            let ovr1 = parseInt(document.getElementById('ovr1').value) || 0;
+            let name2 = document.getElementById('name2').value || "Team B";
+            let ovr2 = parseInt(document.getElementById('ovr2').value) || 0;
 
-            const c1 = document.getElementById('card1');
-            const c2 = document.getElementById('card2');
-            const banner = document.getElementById('result-banner');
+            let c1 = document.getElementById('card1');
+            let c2 = document.getElementById('card2');
+            let res = document.getElementById('result-text');
 
-            // Reset effects
-            c1.classList.remove('winner');
-            c2.classList.remove('winner');
+            // Reset UI
+            c1.className = "card";
+            c2.className = "card";
 
-            if (o1 > o2) {
-                c1.classList.add('winner');
-                banner.style.color = "#edff00";
-                banner.innerHTML = "🏆 " + u1 + " has the stronger squad!";
-            } else if (o2 > o1) {
-                c2.classList.add('winner');
-                banner.style.color = "#edff00";
-                banner.innerHTML = "🏆 " + u2 + " has the stronger squad!";
-            } else if (o1 === 0 && o2 === 0) {
-                banner.innerHTML = "Please enter OVR values!";
-                banner.style.color = "white";
+            // Comparison Logic
+            if (ovr1 > ovr2) {
+                c1.className = "card winner";
+                res.innerHTML = "🏆 " + name1.toUpperCase() + " WINS!";
+            } else if (ovr2 > ovr1) {
+                c2.className = "card winner";
+                res.innerHTML = "🏆 " + name2.toUpperCase() + " WINS!";
+            } else if (ovr1 === 0 && ovr2 === 0) {
+                res.innerHTML = "Enter your OVR to battle!";
             } else {
-                banner.innerHTML = "It's a draw! Both teams are even.";
-                banner.style.color = "white";
+                res.innerHTML = "IT'S A DRAW!";
             }
         }
     </script>
+
 </body>
 </html>
