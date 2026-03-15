@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Fun HI Page</title>
+<title>Fayaz Page</title>
 <style>
 body {
     margin: 0;
@@ -40,18 +40,18 @@ h1 {
 </head>
 <body>
 
-<h1 id="hi">HI</h1>
+<h1 id="name">Fayaz</h1>
 
 <script>
 // Change color on hover
-let hi = document.getElementById('hi');
-hi.addEventListener('mouseover', () => hi.style.color = '#ff0000');
-hi.addEventListener('mouseout', () => hi.style.color = '#fff');
+let nameEl = document.getElementById('name');
+nameEl.addEventListener('mouseover', () => nameEl.style.color = '#ff0000');
+nameEl.addEventListener('mouseout', () => nameEl.style.color = '#fff');
 
 // Grow bigger on click
-hi.addEventListener('click', () => {
-    hi.style.transform = 'scale(2)';
-    setTimeout(() => { hi.style.transform = 'scale(1.2)'; }, 500);
+nameEl.addEventListener('click', () => {
+    nameEl.style.transform = 'scale(2)';
+    setTimeout(() => { nameEl.style.transform = 'scale(1.2)'; }, 500);
 });
 </script>
 
