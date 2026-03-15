@@ -1,85 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>FC Mobile Squad Compare</title>
+    <title>Reaction Speed Test</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0b0e13; color: white; text-align: center; padding: 20px; }
-        .container { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; }
-        .team-card { background: #161b22; border: 2px solid #30363d; border-radius: 15px; padding: 20px; width: 340px; transition: 0.3s; }
-        .winner { border-color: #edff00 !important; box-shadow: 0 0 20px rgba(237, 255, 0, 0.4); }
-        h3 { color: #edff00; margin-bottom: 15px; }
-        input, textarea { width: 90%; background: #0d1117; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
-        textarea { height: 100px; resize: none; font-size: 14px; }
-        .controls { margin-top: 30px; }
-        button { padding: 15px 30px; font-weight: bold; border-radius: 8px; cursor: pointer; border: none; margin: 5px; }
-        .btn-compare { background: #edff00; color: black; }
-        .btn-reset { background: #30363d; color: white; }
-        #result { margin-top: 20px; font-size: 24px; font-weight: bold; color: #edff00; }
+        body { font-family: 'Arial', sans-serif; background: #1a1a1a; color: white; text-align: center; margin: 0; overflow: hidden; }
+        
+        /* The Game Area */
+        #game-area { width: 100vw; height: 80vh; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #333; transition: 0.1s; }
+        
+        .waiting { background: #e74c3c !important; } /* Red */
+        .go { background: #2ecc71 !important; }      /* Green */
+        
+        h1 { font-size: 3rem; pointer-events: none; }
+        #stats { font-size: 1.5rem; margin-top: 20px; }
+        button { padding: 15px 40px; font-size: 1.2rem; font-weight: bold; cursor: pointer; border-radius: 10px; border: none; background: #edff00; }
     </style>
 </head>
 <body>
 
-    <h1>FC MOBILE SQUAD BATTLE</h1>
-
-    <div class="container">
-        <!-- Team 1 -->
-        <div class="team-card" id="card1">
-            <h3>TEAM 1</h3>
-            <input type="text" id="name1" placeholder="In-Game Username">
-            <input type="number" id="ovr1" placeholder="Team OVR (e.g. 104)">
-            <label style="font-size: 12px; color: #8b949e;">YOUR 11 PLAYERS:</label>
-            <textarea id="squad1" placeholder="Ex: Haaland, Vinícius, Rodri..."></textarea>
-        </div>
-
-        <!-- Team 2 -->
-        <div class="team-card" id="card2">
-            <h3>TEAM 2</h3>
-            <input type="text" id="name2" placeholder="Friend's Username">
-            <input type="number" id="ovr2" placeholder="Team OVR (e.g. 102)">
-            <label style="font-size: 12px; color: #8b949e;">FRIEND'S 11 PLAYERS:</label>
-            <textarea id="squad2" placeholder="Ex: Mbappé, Messi, Bellingham..."></textarea>
-        </div>
+    <div id="stats">Click Start to test your reflexes!</div>
+    
+    <div id="game-area">
+        <h1 id="instruction">WAIT FOR GREEN</h1>
     </div>
 
-    <div class="controls">
-        <button class="btn-compare" onclick="battle()">START BATTLE</button>
-        <button class="btn-reset" onclick="resetPage()">RESET ALL</button>
+    <div style="margin-top: 20px;">
+        <button onclick="startGame()">START GAME</button>
+        <button style="background: #555; color: white;" onclick="resetGame()">RESET</button>
     </div>
-
-    <div id="result"></div>
 
     <script>
-        function battle() {
-            let n1 = document.getElementById('name1').value || "Team 1";
-            let o1 = parseInt(document.getElementById('ovr1').value) || 0;
-            let n2 = document.getElementById('name2').value || "Team 2";
-            let o2 = parseInt(document.getElementById('ovr2').value) || 0;
+        let startTime;
+        let timeoutHandle;
+        let isWaiting = false;
+        let isGreen = false;
+
+        const area = document.getElementById('game-area');
+        const instruction = document.getElementById('instruction');
+        const stats = document.getElementById('stats');
+
+        function startGame() {
+            resetGame();
+            isWaiting = true;
+            area.className = "waiting";
+            instruction.innerText = "WAIT FOR IT...";
             
-            let c1 = document.getElementById('card1');
-            let c2 = document.getElementById('card2');
-            let res = document.getElementById('result');
+            // Generate a random wait time between 2 and 5 seconds
+            let randomTime = Math.floor(Math.random() * 3000) + 2000;
 
-            c1.classList.remove('winner');
-            c2.classList.remove('winner');
+            timeoutHandle = setTimeout(() => {
+                area.className = "go";
+                instruction.innerText = "CLICK NOW!!!";
+                startTime = Date.now();
+                isGreen = true;
+                isWaiting = false;
+            }, randomTime);
+        }
 
-            if (o1 > o2) {
-                c1.classList.add('winner');
-                res.innerText = "🏆 " + n1.toUpperCase() + " WINS!";
-            } else if (o2 > o1) {
-                c2.classList.add('winner');
-                res.innerText = "🏆 " + n2.toUpperCase() + " WINS!";
-            } else {
-                res.innerText = "IT'S A DRAW!";
+        // What happens when you click the big colored box
+        area.onclick = function() {
+            if (isGreen) {
+                let endTime = Date.now();
+                let reactionTime = endTime - startTime;
+                instruction.innerText = reactionTime + " ms";
+                stats.innerText = "Your Speed: " + reactionTime + " milliseconds!";
+                isGreen = false;
+                area.style.background = "#333";
+            } else if (isWaiting) {
+                // Too early!
+                clearTimeout(timeoutHandle);
+                instruction.innerText = "TOO EARLY!";
+                stats.innerText = "You clicked before it turned green!";
+                isWaiting = false;
+                area.style.background = "#333";
             }
         }
 
-        function resetPage() {
-            // Clears all inputs and textareas
-            document.querySelectorAll('input, textarea').forEach(el => el.value = "");
-            document.getElementById('card1').classList.remove('winner');
-            document.getElementById('card2').classList.remove('winner');
-            document.getElementById('result').innerText = "";
+        function resetGame() {
+            clearTimeout(timeoutHandle);
+            isWaiting = false;
+            isGreen = false;
+            area.style.background = "#333";
+            area.className = "";
+            instruction.innerText = "READY?";
+            stats.innerText = "Click Start to try again.";
         }
     </script>
 </body>
