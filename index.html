@@ -1,48 +1,133 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Fayaz's Site</title>
+    <title>Fayaz's Speedster</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body { 
             margin: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            font-family: sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             color: white;
-            /* This sets the colors and makes the background big so it can move */
             background: linear-gradient(-45deg, #1e90ff, #8a2be2, #ff1493, #00ced1);
             background-size: 400% 400%;
-            animation: gradient 10s ease infinite;
+            overflow: hidden;
+            transition: background-color 0.5s;
         }
 
-        /* This is the "brain" of the animation - it moves the background */
+        /* This is the Speedometer look */
+        .dashboard {
+            text-align: center;
+            background: rgba(0,0,0,0.7);
+            padding: 30px;
+            border-radius: 50%;
+            border: 5px solid #555;
+            width: 250px;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        #speed-text { font-size: 60px; font-weight: bold; margin: 0; color: #00ff00; }
+        .unit { font-size: 20px; color: #aaa; }
+
+        h1 { 
+            font-size: 70px;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            margin-top: 40px;
+            text-shadow: 0px 10px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Buttons */
+        .controls { margin-top: 50px; display: flex; gap: 20px; }
+        
+        button {
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .gas { background-color: #2ecc71; color: white; }
+        .gas:active { background-color: #27ae60; transform: translateY(4px); }
+        .brake { background-color: #e74c3c; color: white; }
+        .brake:active { background-color: #c0392b; transform: translateY(4px); }
+
+        /* Animation class that we will turn on with JavaScript */
+        .fast-mode {
+            animation: gradient 0.05s linear infinite;
+        }
+
         @keyframes gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
-        h1 { 
-            font-size: 80px;
-            text-transform: uppercase;
-            letter-spacing: 10px;
-            text-shadow: 0px 10px 20px rgba(0,0,0,0.3);
-            /* This makes the text "pop" */
-            animation: float 3s ease-in-out infinite;
-        }
-
-        /* This makes the name "Fayaz" bounce slowly up and down */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
     </style>
 </head>
 <body>
 
-    <h1>Fayaz</h1>
+    <div class="dashboard">
+        <p id="speed-text">0</p>
+        <p class="unit">MPH</p>
+    </div>
+
+    <h1 id="name-display">Fayaz</h1>
+
+    <div class="controls">
+        <button class="gas" onmousedown="startGas()" onmouseup="stopGas()" ontouchstart="startGas()" ontouchend="stopGas()">GAS</button>
+        <button class="brake" onclick="hitBrake()">BRAKE</button>
+    </div>
+
+    <script>
+        let speed = 0;
+        let accel;
+        const speedDisplay = document.getElementById('speed-text');
+        const body = document.body;
+
+        function startGas() {
+            // Accelerate
+            accel = setInterval(() => {
+                if (speed < 300) { // Max speed 300
+                    speed += 5;
+                    updateDashboard();
+                }
+            }, 50);
+            body.classList.add('fast-mode');
+        }
+
+        function stopGas() {
+            clearInterval(accel);
+            // Gradually slow down background but keep speed
+            body.classList.remove('fast-mode');
+        }
+
+        function hitBrake() {
+            speed = 0;
+            updateDashboard();
+            body.classList.remove('fast-mode');
+            speedDisplay.style.color = "#ff0000"; // Red when braking
+            setTimeout(() => { speedDisplay.style.color = "#00ff00"; }, 500);
+        }
+
+        function updateDashboard() {
+            speedDisplay.innerText = speed;
+            // Make the text shake more as you go faster
+            const shake = speed / 50;
+            document.getElementById('name-display').style.transform = `translate(${Math.random()*shake}px, ${Math.random()*shake}px)`;
+        }
+    </script>
 
 </body>
 </html>
