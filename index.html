@@ -17,14 +17,16 @@ body{
     position:absolute;
     top:20px;
     left:20px;
-    z-index:2;
+    z-index:2; /* above canvas */
     white-space:pre-line;
+    pointer-events:none; /* let canvas not block */
 }
 
 canvas{
     position:absolute;
     top:0;
     left:0;
+    z-index:1; /* behind text */
 }
 
 #control{
@@ -56,7 +58,7 @@ canvas.height = window.innerHeight;
 
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const fontSize = 16;
-const columns = canvas.width / fontSize;
+const columns = Math.floor(canvas.width / fontSize);
 const drops = Array(columns).fill(1);
 
 function drawMatrix(){
@@ -128,7 +130,6 @@ function boot(){
     if(i<bootLines.length){
         terminal.innerHTML+=bootLines[i]+"\n";
         i++;
-        // Random extra events
         const rand = Math.random();
         if(rand<0.2) randomPortScan();
         else if(rand<0.35) randomCPUScan();
@@ -136,7 +137,7 @@ function boot(){
         else if(rand<0.6) networkPacket();
         setTimeout(boot,600);
     } else {
-        // SHOW HUGE SYSTEM CONTROL TITLE
+        // Show huge SYSTEM CONTROL at the end
         setTimeout(()=>{
             document.getElementById("control").style.display="block";
         },500);
@@ -144,6 +145,12 @@ function boot(){
 }
 
 boot();
+
+// Make canvas resize with window
+window.addEventListener("resize", ()=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
 </script>
 </body>
 </html>
