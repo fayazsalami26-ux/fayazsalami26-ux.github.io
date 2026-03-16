@@ -10,44 +10,137 @@ body{
     background:black;
     color:#00ff00;
     font-family: monospace;
-    padding:40px;
     font-size:22px;
+    overflow:hidden;
 }
 
 #terminal{
+    position:absolute;
+    top:40px;
+    left:40px;
+    z-index:1;
     white-space:pre-line;
 }
-</style>
 
+input{
+    background:black;
+    border:none;
+    color:#00ff00;
+    font-family:monospace;
+    font-size:22px;
+    outline:none;
+}
+
+canvas{
+    position:absolute;
+    top:0;
+    left:0;
+}
+</style>
 </head>
+
 <body>
 
+<canvas id="matrix"></canvas>
+
 <div id="terminal"></div>
+<input id="password" type="password" style="display:none;" autofocus>
 
 <script>
 
-const lines = [
-"Booting system...",
-"Loading security modules...",
-"Connecting to encrypted network...",
-"Accessing mainframe...",
-"System ready.",
+// MATRIX BACKGROUND
+
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+
+const drops = [];
+
+for(let i = 0; i < columns; i++){
+    drops[i] = 1;
+}
+
+function drawMatrix(){
+
+    ctx.fillStyle = "rgba(0,0,0,0.05)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle = "#0F0";
+    ctx.font = fontSize + "px monospace";
+
+    for(let i = 0; i < drops.length; i++){
+
+        const text = letters[Math.floor(Math.random()*letters.length)];
+
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975){
+            drops[i] = 0;
+        }
+
+        drops[i]++;
+
+    }
+}
+
+setInterval(drawMatrix, 33);
+
+
+// TERMINAL BOOT
+
+const terminal = document.getElementById("terminal");
+
+const bootLines = [
+"Initializing secure system...",
+"Scanning network...",
+"IP FOUND: 192.168.0.21",
+"Connecting...",
+"Connection established",
 "",
-"Welcome Fayaz"
+"ENTER PASSWORD:"
 ];
 
 let i = 0;
 
-function typeLine(){
-    if(i < lines.length){
-        const terminal = document.getElementById("terminal");
-        terminal.innerHTML += lines[i] + "\n";
+function boot(){
+    if(i < bootLines.length){
+        terminal.innerHTML += bootLines[i] + "\n";
         i++;
-        setTimeout(typeLine, 800);
+        setTimeout(boot, 800);
+    } else {
+        document.getElementById("password").style.display = "inline";
     }
 }
 
-typeLine();
+boot();
+
+
+// PASSWORD
+
+document.getElementById("password").addEventListener("keydown", function(e){
+
+    if(e.key === "Enter"){
+
+        terminal.innerHTML += "********\n";
+        terminal.innerHTML += "Checking credentials...\n";
+
+        setTimeout(()=>{
+
+            terminal.innerHTML += "\nACCESS GRANTED\n";
+            terminal.innerHTML += "WELCOME FAYAZ\n";
+
+            document.getElementById("password").style.display = "none";
+
+        },1000);
+    }
+
+});
 
 </script>
 
