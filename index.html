@@ -24,11 +24,13 @@ body{
 
 input{
     background:black;
-    border:none;
+    border:2px solid #00ff00;
     color:#00ff00;
     font-family:monospace;
     font-size:22px;
     outline:none;
+    padding:4px 6px;
+    margin-left:10px;
 }
 
 canvas{
@@ -92,7 +94,6 @@ for(let i = 0; i < columns; i++){
 }
 
 function drawMatrix(){
-
     ctx.fillStyle = "rgba(0,0,0,0.05)";
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
@@ -100,9 +101,7 @@ function drawMatrix(){
     ctx.font = fontSize + "px monospace";
 
     for(let i = 0; i < drops.length; i++){
-
         const text = letters[Math.floor(Math.random()*letters.length)];
-
         ctx.fillText(text, i*fontSize, drops[i]*fontSize);
 
         if(drops[i]*fontSize > canvas.height && Math.random() > 0.975){
@@ -115,7 +114,6 @@ function drawMatrix(){
 
 setInterval(drawMatrix, 33);
 
-
 // RANDOM IP
 function randomIP(){
     return Math.floor(Math.random()*255)+"."+
@@ -126,9 +124,9 @@ function randomIP(){
 
 const ip = randomIP();
 
-
 // TERMINAL BOOT
 const terminal = document.getElementById("terminal");
+const input = document.getElementById("password");
 
 const bootLines = [
 "Initializing secure system...",
@@ -148,24 +146,18 @@ function boot(){
         i++;
         setTimeout(boot, 800);
     } else {
-        const input = document.getElementById("password");
         input.style.display = "inline";
-        input.focus(); // FIX: automatically lets you type
+        input.focus();
     }
 }
 
 boot();
 
-
 // PASSWORD SYSTEM
-const input = document.getElementById("password");
-
 input.addEventListener("keydown", function(e){
-
     if(e.key === "Enter"){
 
         const pass = input.value;
-
         terminal.innerHTML += "********\n";
 
         if(pass === "Fayaz"){
@@ -173,15 +165,15 @@ input.addEventListener("keydown", function(e){
             terminal.innerHTML += "Checking credentials...\n";
 
             setTimeout(()=>{
-
+                // FLASH EFFECT
                 const flash = document.getElementById("flash");
-
                 flash.style.opacity = "0.7";
                 setTimeout(()=>{ flash.style.opacity = "0"; },150);
 
                 terminal.innerHTML += "\nACCESS GRANTED\n";
                 terminal.innerHTML += "WELCOME FAYAZ\n";
 
+                // SHOW HUGE TITLE
                 setTimeout(()=>{
                     document.getElementById("control").style.display = "block";
                 },500);
@@ -196,10 +188,9 @@ input.addEventListener("keydown", function(e){
         }
 
         input.value = "";
+        input.focus(); // keep focus for next attempt
     }
-
 });
-
 </script>
 
 </body>
