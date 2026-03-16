@@ -26,12 +26,26 @@ canvas{
     top:0;
     left:0;
 }
+
+#control{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:100px;
+    color:#00ff00;
+    text-shadow:0 0 20px #00ff00,0 0 40px #00ff00,0 0 60px #00ff00;
+    display:none;
+    z-index:3;
+    text-align:center;
+}
 </style>
 </head>
 <body>
 
 <canvas id="matrix"></canvas>
 <div id="terminal"></div>
+<div id="control">SYSTEM CONTROL<br>FAYAZ</div>
 
 <script>
 // MATRIX BACKGROUND
@@ -70,7 +84,7 @@ const bootLines = [
 "Initializing secure system...",
 "Loading security modules...",
 "Scanning network...",
-"IP FOUND: " + ip,
+"IP FOUND: "+ip,
 "Connecting to server...",
 "Authentication protocol enabled...",
 "Encrypting data streams...",
@@ -88,7 +102,7 @@ const bootLines = [
 const terminal = document.getElementById("terminal");
 let i = 0;
 
-// Additional animated fake scans
+// Extra animated events
 function randomPortScan(){
     const port = Math.floor(Math.random()*65535);
     terminal.innerHTML+="[SCAN] Checking port "+port+"...\n";
@@ -114,13 +128,18 @@ function boot(){
     if(i<bootLines.length){
         terminal.innerHTML+=bootLines[i]+"\n";
         i++;
-        // Add random extra events
+        // Random extra events
         const rand = Math.random();
         if(rand<0.2) randomPortScan();
         else if(rand<0.35) randomCPUScan();
         else if(rand<0.5) randomMemoryScan();
         else if(rand<0.6) networkPacket();
         setTimeout(boot,600);
+    } else {
+        // SHOW HUGE SYSTEM CONTROL TITLE
+        setTimeout(()=>{
+            document.getElementById("control").style.display="block";
+        },500);
     }
 }
 
