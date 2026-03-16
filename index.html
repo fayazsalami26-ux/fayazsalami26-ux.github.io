@@ -2,35 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Fayaz System</title>
-
+<title>Fayaz Hacker System</title>
 <style>
 body{
     margin:0;
     background:black;
     color:#00ff00;
     font-family: monospace;
-    font-size:22px;
+    font-size:20px;
     overflow:hidden;
 }
 
 #terminal{
     position:absolute;
-    top:40px;
-    left:40px;
+    top:20px;
+    left:20px;
     z-index:2;
     white-space:pre-line;
-}
-
-input{
-    background:black;
-    border:2px solid #00ff00;
-    color:#00ff00;
-    font-family:monospace;
-    font-size:22px;
-    outline:none;
-    padding:4px 6px;
-    margin-left:10px;
 }
 
 canvas{
@@ -38,160 +26,105 @@ canvas{
     top:0;
     left:0;
 }
-
-#flash{
-    position:fixed;
-    width:100%;
-    height:100%;
-    background:#00ff00;
-    opacity:0;
-    pointer-events:none;
-    z-index:3;
-}
-
-#control{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    font-size:100px;
-    color:#00ff00;
-    text-shadow:0 0 20px #00ff00,0 0 40px #00ff00,0 0 60px #00ff00;
-    display:none;
-    z-index:4;
-    text-align:center;
-}
 </style>
 </head>
-
 <body>
 
 <canvas id="matrix"></canvas>
-<div id="flash"></div>
-
 <div id="terminal"></div>
-<input id="password" type="password" style="display:none;">
-
-<div id="control">SYSTEM CONTROL<br>FAYAZ</div>
 
 <script>
-
 // MATRIX BACKGROUND
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const fontSize = 16;
 const columns = canvas.width / fontSize;
-
-const drops = [];
-
-for(let i = 0; i < columns; i++){
-    drops[i] = 1;
-}
+const drops = Array(columns).fill(1);
 
 function drawMatrix(){
     ctx.fillStyle = "rgba(0,0,0,0.05)";
     ctx.fillRect(0,0,canvas.width,canvas.height);
-
     ctx.fillStyle = "#0F0";
     ctx.font = fontSize + "px monospace";
-
-    for(let i = 0; i < drops.length; i++){
+    for(let i=0;i<drops.length;i++){
         const text = letters[Math.floor(Math.random()*letters.length)];
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-
-        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975){
-            drops[i] = 0;
-        }
-
+        ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+        if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
         drops[i]++;
     }
 }
-
-setInterval(drawMatrix, 33);
+setInterval(drawMatrix,33);
 
 // RANDOM IP
 function randomIP(){
-    return Math.floor(Math.random()*255)+"."+
-           Math.floor(Math.random()*255)+"."+
-           Math.floor(Math.random()*255)+"."+
-           Math.floor(Math.random()*255);
+    return Array.from({length:4},()=>Math.floor(Math.random()*255)).join(".");
 }
-
 const ip = randomIP();
 
-// TERMINAL BOOT
-const terminal = document.getElementById("terminal");
-const input = document.getElementById("password");
-
+// TERMINAL LINES
 const bootLines = [
 "Initializing secure system...",
+"Loading security modules...",
 "Scanning network...",
 "IP FOUND: " + ip,
-"Connecting...",
-"Connection established",
-"",
-"ENTER PASSWORD:"
+"Connecting to server...",
+"Authentication protocol enabled...",
+"Encrypting data streams...",
+"Downloading firewall rules...",
+"Checking proxy connections...",
+"Initializing VPN tunnel...",
+"Pinging mainframe...",
+"Loading kernel modules...",
+"Accessing encrypted databases...",
+"System check complete...",
+"Connection stable...",
+"System ready."
 ];
 
+const terminal = document.getElementById("terminal");
 let i = 0;
 
+// Additional animated fake scans
+function randomPortScan(){
+    const port = Math.floor(Math.random()*65535);
+    terminal.innerHTML+="[SCAN] Checking port "+port+"...\n";
+}
+
+function randomCPUScan(){
+    const cpu = Math.floor(Math.random()*100);
+    terminal.innerHTML+="[CPU] Usage "+cpu+"%\n";
+}
+
+function randomMemoryScan(){
+    const mem = Math.floor(Math.random()*32000);
+    terminal.innerHTML+="[MEMORY] "+mem+"MB used\n";
+}
+
+function networkPacket(){
+    const packets = Math.floor(Math.random()*5000);
+    terminal.innerHTML+="[NET] Packets transmitted: "+packets+"\n";
+}
+
+// Boot sequence with extra scans
 function boot(){
-    if(i < bootLines.length){
-        terminal.innerHTML += bootLines[i] + "\n";
+    if(i<bootLines.length){
+        terminal.innerHTML+=bootLines[i]+"\n";
         i++;
-        setTimeout(boot, 800);
-    } else {
-        input.style.display = "inline";
-        input.focus();
+        // Add random extra events
+        const rand = Math.random();
+        if(rand<0.2) randomPortScan();
+        else if(rand<0.35) randomCPUScan();
+        else if(rand<0.5) randomMemoryScan();
+        else if(rand<0.6) networkPacket();
+        setTimeout(boot,600);
     }
 }
 
 boot();
-
-// PASSWORD SYSTEM
-input.addEventListener("keydown", function(e){
-    if(e.key === "Enter"){
-
-        const pass = input.value;
-        terminal.innerHTML += "********\n";
-
-        if(pass === "Fayaz"){
-
-            terminal.innerHTML += "Checking credentials...\n";
-
-            setTimeout(()=>{
-                // FLASH EFFECT
-                const flash = document.getElementById("flash");
-                flash.style.opacity = "0.7";
-                setTimeout(()=>{ flash.style.opacity = "0"; },150);
-
-                terminal.innerHTML += "\nACCESS GRANTED\n";
-                terminal.innerHTML += "WELCOME FAYAZ\n";
-
-                // SHOW HUGE TITLE
-                setTimeout(()=>{
-                    document.getElementById("control").style.display = "block";
-                },500);
-
-            },800);
-
-        } else {
-
-            terminal.innerHTML += "ACCESS DENIED\n";
-            terminal.innerHTML += "TRY AGAIN\n\n";
-
-        }
-
-        input.value = "";
-        input.focus(); // keep focus for next attempt
-    }
-});
 </script>
-
 </body>
 </html>
